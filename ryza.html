@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECRET</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background:#1a1a1a;
+    color:#fff;
+    overflow:hidden;
+}
+
+.countdown-container{
+    display:flex;
+    gap:15px;
+    font-size:8rem;
+    font-weight:800;
+}
+
+#birthday-content{
+    display:none;
+    text-align:center;
+}
+
+.cake{
+    font-size:120px;
+    margin-bottom:20px;
+}
+
+button{
+    margin-top:20px;
+    padding:15px 35px;
+    font-size:20px;
+    border:none;
+    border-radius:50px;
+    background:#4a90e2;
+    color:#fff;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#357abd;
+}
+
+#wish-paper{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:520px;
+    max-width:90%;
+    background:#fffef7;
+    color:#333;
+    padding:35px;
+    border-radius:15px;
+    border:6px solid #e0d6b8;
+    box-shadow:0 20px 40px rgba(0,0,0,.4);
+    z-index:999;
+    animation:paper .4s ease;
+}
+
+#wish-paper h1{
+    text-align:center;
+    color:#d35400;
+    margin-bottom:20px;
+}
+
+#wish-paper p{
+    font-size:18px;
+    line-height:1.8;
+    text-align:justify;
+}
+
+.close{
+    position:absolute;
+    right:18px;
+    top:12px;
+    font-size:25px;
+    cursor:pointer;
+}
+
+#confetti-container{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.confetti{
+    position:absolute;
+    width:12px;
+    height:12px;
+    opacity:0;
+}
+
+@keyframes paper{
+from{
+    opacity:0;
+    transform:translate(-50%,-55%) scale(.9);
+}
+to{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+}
+}
+
+@keyframes fall{
+0%{
+    transform:translateY(-50px) rotate(0deg);
+    opacity:1;
+}
+100%{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+}
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="confetti-container"></div>
+
+<div id="timer-box" class="countdown-container">
+<span id="h">11</span>:
+<span id="m">59</span>:
+<span id="s">50</span>
+</div>
+
+<div id="birthday-content">
+    <div class="cake">🎂</div>
+    <h1>Happy Birthday, Royce! 🎉</h1>
+    <button onclick="showWish()">CLICK ME</button>
+</div>
+
+<div id="wish-paper">
+    <span class="close" onclick="closeWish()">✖</span>
+
+    <h1>🎉Happy Birthday, Royce!🎉</h1>
+
+    <p>
+        Wishing you a day filled with happiness, laughter, and unforgettable memories.
+        May this new year of your life bring you success, good health, peace, and endless blessings.
+        Keep smiling, stay strong, and continue chasing your dreams.<br><br>
+
+        Enjoy every moment of your special day and may all your wishes come true.<br><br>
+
+        Have a wonderful birthday and an amazing year ahead!<br><br>
+
+        🎈 Happy Birthday! 🎂🎁
+    </p>
+
+</div>
+
+<script>
+
+// Get the timer elements
+const h = document.getElementById("h");
+const m = document.getElementById("m");
+const s = document.getElementById("s");
+
+// Start at 11:59:50
+let hours = 11;
+let minutes = 59;
+let seconds = 50;
+
+const timerInterval = setInterval(() => {
+
+    seconds++;
+
+    if(seconds >= 60){
+        seconds = 0;
+        minutes++;
+    }
+
+    if(minutes >= 60){
+        minutes = 0;
+        hours++;
+    }
+
+    h.textContent = String(hours).padStart(2,"0");
+    m.textContent = String(minutes).padStart(2,"0");
+    s.textContent = String(seconds).padStart(2,"0");
+
+    if(hours === 12 && minutes === 0 && seconds === 0){
+
+        clearInterval(timerInterval);
+
+        document.getElementById("timer-box").style.display="none";
+        document.getElementById("birthday-content").style.display="block";
+
+        triggerCelebration();
+    }
+
+},1000);
+
+function showWish(){
+    document.getElementById("wish-paper").style.display="block";
+}
+
+function closeWish(){
+    document.getElementById("wish-paper").style.display="none";
+}
+
+function triggerCelebration(){
+
+    const container=document.getElementById("confetti-container");
+
+    const colors=[
+        "#ff6b6b",
+        "#feca57",
+        "#48dbfb",
+        "#1dd1a1",
+        "#5f27cd",
+        "#ff9ff3"
+    ];
+
+    const confettiInterval=setInterval(()=>{
+
+        for(let i=0;i<20;i++){
+
+            const c=document.createElement("div");
+
+            c.className="confetti";
+
+            c.style.left=Math.random()*100+"vw";
+            c.style.top="-20px";
+
+            c.style.background=
+                colors[Math.floor(Math.random()*colors.length)];
+
+            c.style.animation=`fall ${Math.random()*3+3}s linear forwards`;
+
+            container.appendChild(c);
+
+            setTimeout(()=>{
+                c.remove();
+            },6000);
+
+        }
+
+    },250);
+
+    setTimeout(()=>{
+        clearInterval(confettiInterval);
+    },60000);
+
+}
+
+</script>
+
+</body>
+</html>
